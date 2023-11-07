@@ -56,9 +56,6 @@ class VentanaPrincipal(QMainWindow):
             cv2.imshow('wey', img2)
 
 
-
-
-
 app = QApplication(sys.argv)
 
 ventana = VentanaPrincipal()
