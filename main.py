@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QPushButton, QMainWindow, QFileDialog,
-                             QLabel, QWidget, QHBoxLayout, QVBoxLayout)
-from PyQt6.QtGui import QPixmap
+                             QLabel, QWidget, QDoubleSpinBox,QHBoxLayout, QVBoxLayout)
+from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import QSize, Qt
 import sys
 import cv2
@@ -15,6 +15,7 @@ class VentanaPrincipal(QMainWindow):
         self.setFixedSize(QSize(1280, 720))
 
         self.img_original = QLabel(self)
+        self.img_final = QLabel(self)
         self.ruta = None
 
         boton_select_img = QPushButton("Abrir imagen")
@@ -25,19 +26,26 @@ class VentanaPrincipal(QMainWindow):
         boton_filtro_log.setFixedSize(QSize(200, 100))
         boton_filtro_log.clicked.connect(self.filtro_img_click)
 
+        self.parametro = QDoubleSpinBox()
+        self.parametro.setRange(1, 100)
+        self.parametro.setPrefix('C=')
+        self.parametro.setFixedSize(QSize(75, 20))
+
         h_layout = QHBoxLayout()
         h_layout.addWidget(boton_select_img)
         h_layout.addWidget(boton_filtro_log)
+        h_layout.addWidget(self.parametro)
         h_layout.addWidget(self.img_original)
+        h_layout.addWidget(self.img_final)
 
         contenedor = QWidget()
         contenedor.setLayout(h_layout)
 
         self.setCentralWidget(contenedor)
-        # self.setCentralWidget(button_sel_img)
 
     def select_img_click(self):
-        img_name = QFileDialog.getOpenFileName(self, 'Abrir archivo', '/home', '*.tif')
+        img_name = QFileDialog.getOpenFileName(self, 'Abrir archivo', '/home/',
+                                               '*.tif, *.jpg, *.png')
         self.ruta = img_name[0]
         orig_pix_map = QPixmap(self.ruta)
         scaled_pix_map = orig_pix_map.scaled(QSize(256, 256),
@@ -50,10 +58,18 @@ class VentanaPrincipal(QMainWindow):
             return 0
         else:
             img_no_filtro = cv2.imread(self.ruta)
-            img2 = img_no_filtro.astype(float)
-            img2 = 50 * np.log(1 + img_no_filtro)
-            img2 = img2.astype(np.uint8)
-            cv2.imshow('wey', img2)
+            img_no_filtro = cv2.cvtColor(img_no_filtro, cv2.COLOR_RGB2GRAY)
+            c = self.parametro.value()
+            img_no_filtro = img_no_filtro.astype(float)
+            img_filtro = c * np.log(img_no_filtro + 1)
+            img_filtro = img_filtro.astype(np.uint8)
+            img_filtro = QImage(img_filtro, img_filtro.shape[1], img_filtro.shape[0],
+                                img_filtro.strides[0], QImage.Format.Format_Grayscale8)
+            pix_map_filtro = QPixmap.fromImage(img_filtro)
+            scaled_pix_map_filtro = pix_map_filtro.scaled(QSize(256, 256),
+                                                          Qt.AspectRatioMode.KeepAspectRatio)
+            self.img_final.setPixmap(scaled_pix_map_filtro)
+            self.img_final.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
 
 app = QApplication(sys.argv)
