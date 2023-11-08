@@ -45,7 +45,7 @@ class VentanaPrincipal(QMainWindow):
 
     def select_img_click(self):
         img_name = QFileDialog.getOpenFileName(self, 'Abrir archivo', '/home/',
-                                               '*.tif, *.jpg, *.png')
+                                               '*.tif *.jpg *.png')
         self.ruta = img_name[0]
         orig_pix_map = QPixmap(self.ruta)
         scaled_pix_map = orig_pix_map.scaled(QSize(256, 256),
