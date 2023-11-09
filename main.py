@@ -1,5 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QPushButton, QMainWindow, QFileDialog,
-                             QLabel, QWidget, QDoubleSpinBox,QHBoxLayout, QVBoxLayout)
+                             QLabel, QWidget, QDoubleSpinBox,QHBoxLayout,
+                             QStyle, QVBoxLayout)
 from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import QSize, Qt
 import sys
@@ -13,18 +14,24 @@ class VentanaPrincipal(QMainWindow):
 
         self.setWindowTitle("Transformación logaritmo")
         self.setFixedSize(QSize(1280, 720))
+        icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TrashIcon)
+        self.setWindowIcon(icon)
 
         self.img_original = QLabel(self)
         self.img_final = QLabel(self)
         self.ruta = None
 
         boton_select_img = QPushButton("Abrir imagen")
-        boton_select_img.setFixedSize(QSize(200, 100))
+        boton_select_img.setFixedSize(QSize(100, 50))
         boton_select_img.clicked.connect(self.select_img_click)
 
         boton_filtro_log = QPushButton("Aplicar filtro")
-        boton_filtro_log.setFixedSize(QSize(200, 100))
+        boton_filtro_log.setFixedSize(QSize(100, 50))
         boton_filtro_log.clicked.connect(self.filtro_img_click)
+
+        boton_filtro_opt = QPushButton("Aplicar filtro")
+        boton_filtro_opt.setFixedSize(QSize(100, 50))
+        boton_filtro_opt.clicked.connect(self.filtro_opt_click)
 
         self.parametro = QDoubleSpinBox()
         self.parametro.setRange(1, 100)
@@ -34,6 +41,7 @@ class VentanaPrincipal(QMainWindow):
         h_layout = QHBoxLayout()
         h_layout.addWidget(boton_select_img)
         h_layout.addWidget(boton_filtro_log)
+        h_layout.addWidget(boton_filtro_opt)
         h_layout.addWidget(self.parametro)
         h_layout.addWidget(self.img_original)
         h_layout.addWidget(self.img_final)
@@ -61,6 +69,24 @@ class VentanaPrincipal(QMainWindow):
             img_no_filtro = cv2.cvtColor(img_no_filtro, cv2.COLOR_RGB2GRAY)
             c = self.parametro.value()
             img_no_filtro = img_no_filtro.astype(float)
+            img_filtro = c * np.log(img_no_filtro + 1)
+            img_filtro = img_filtro.astype(np.uint8)
+            img_filtro = QImage(img_filtro, img_filtro.shape[1], img_filtro.shape[0],
+                                img_filtro.strides[0], QImage.Format.Format_Grayscale8)
+            pix_map_filtro = QPixmap.fromImage(img_filtro)
+            scaled_pix_map_filtro = pix_map_filtro.scaled(QSize(256, 256),
+                                                          Qt.AspectRatioMode.KeepAspectRatio)
+            self.img_final.setPixmap(scaled_pix_map_filtro)
+            self.img_final.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    def filtro_opt_click(self):
+        if not self.ruta:
+            return 0
+        else:
+            img_no_filtro = cv2.imread(self.ruta)
+            img_no_filtro = cv2.cvtColor(img_no_filtro, cv2.COLOR_RGB2GRAY)
+            img_no_filtro = img_no_filtro.astype(float)
+            c = 255 / np.log(1 + np.max(img_no_filtro))
             img_filtro = c * np.log(img_no_filtro + 1)
             img_filtro = img_filtro.astype(np.uint8)
             img_filtro = QImage(img_filtro, img_filtro.shape[1], img_filtro.shape[0],
