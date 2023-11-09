@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QApplication, QPushButton, QMainWindow, QFileDialog,
                              QLabel, QWidget, QDoubleSpinBox, QGridLayout, QHBoxLayout,
-                             QStyle)
-from PyQt6.QtGui import QPixmap, QImage
+                             QStyle, QStatusBar)
+from PyQt6.QtGui import QPixmap, QImage, QAction, QKeySequence
 from PyQt6.QtCore import QSize, Qt
 import sys
 import cv2
@@ -14,12 +14,33 @@ class VentanaPrincipal(QMainWindow):
 
         self.setWindowTitle("Transformación logaritmo")
         self.setFixedSize(QSize(1280, 720))
-        icon = self.style().standardIcon(QStyle.StandardPixmap.SP_TrashIcon)
+        icon = self.style().standardIcon(QStyle.StandardPixmap.SP_MessageBoxCritical)
         self.setWindowIcon(icon)
 
         self.img_original = QLabel(self)
         self.img_final = QLabel(self)
         self.ruta = None
+
+        accion_abrir_file = QAction('Abrir imagen', self)
+        accion_abrir_file.triggered.connect(self.select_img_click)
+        accion_abrir_file.setShortcut(QKeySequence('Ctrl+A'))
+
+        accion_clear_img_original = QAction('Borrar imagen original', self)
+        accion_clear_img_original.triggered.connect(self.clear_img_original)
+        accion_clear_img_original.setShortcut(QKeySequence('Ctrl+D'))
+
+        accion_clear_img_filtro = QAction('Borrar imagen transformada', self)
+        accion_clear_img_filtro.triggered.connect(self.clear_img_final)
+        accion_clear_img_filtro.setShortcut(QKeySequence('Ctrl+Alt+D'))
+
+
+        menu_bar = self.menuBar()
+        menu_archivo = menu_bar.addMenu('&Archivo')
+        menu_archivo.addSeparator()
+        menu_archivo.addAction(accion_abrir_file)
+        menu_archivo.addAction(accion_clear_img_original)
+        menu_archivo.addAction(accion_clear_img_filtro)
+
 
         boton_select_img = QPushButton("Abrir imagen")
         boton_select_img.setFixedSize(QSize(100, 50))
@@ -77,7 +98,6 @@ class VentanaPrincipal(QMainWindow):
         scaled_pix_map = orig_pix_map.scaled(QSize(400, 400),
                                              Qt.AspectRatioMode.KeepAspectRatio)
         self.img_original.setPixmap(scaled_pix_map)
-        # self.img_original.setAlignment(Qt.AlignmentFlag.AlignTop)
 
     def filtro_img_click(self):
         if not self.ruta:
@@ -95,7 +115,6 @@ class VentanaPrincipal(QMainWindow):
             scaled_pix_map_filtro = pix_map_filtro.scaled(QSize(400, 400),
                                                           Qt.AspectRatioMode.KeepAspectRatio)
             self.img_final.setPixmap(scaled_pix_map_filtro)
-            # self.img_final.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
     def filtro_opt_click(self):
         if not self.ruta:
@@ -114,7 +133,12 @@ class VentanaPrincipal(QMainWindow):
             scaled_pix_map_filtro = pix_map_filtro.scaled(QSize(400, 400),
                                                           Qt.AspectRatioMode.KeepAspectRatio)
             self.img_final.setPixmap(scaled_pix_map_filtro)
-            # self.img_final.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+    def clear_img_original(self):
+        self.img_original.clear()
+
+    def clear_img_final(self):
+        self.img_final.clear()
 
 
 app = QApplication(sys.argv)
