@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QApplication, QPushButton, QMainWindow, QFileDialog,
                              QLabel, QWidget, QDoubleSpinBox, QGridLayout, QHBoxLayout,
-                             QStyle, QStatusBar)
-from PyQt6.QtGui import QPixmap, QImage, QAction, QKeySequence
+                             QStyle, QStatusBar, QToolBar)
+from PyQt6.QtGui import QPixmap, QImage, QAction, QKeySequence, QIcon
 from PyQt6.QtCore import QSize, Qt
 import sys
 import cv2
@@ -24,29 +24,43 @@ class VentanaPrincipal(QMainWindow):
         self.bandera_img_final = False
         self.ruta = None
 
-        accion_abrir_file = QAction('Abrir imagen', self)
+        accion_abrir_file = QAction(QIcon('icons/folder-open-document.png'), 'Abrir imagen', self)
+        accion_abrir_file.setToolTip('Ctrl + a')
         accion_abrir_file.triggered.connect(self.select_img_click)
         accion_abrir_file.setShortcut(QKeySequence('Ctrl+A'))
 
-        accion_save_file = QAction('Guardar imagen transformada', self)
+        accion_save_file = QAction(QIcon('icons/disk-black.png'), 'Guardar imagen transformada', self)
+        accion_save_file.setToolTip('Ctrl + s')
         accion_save_file.triggered.connect(self.save_file)
         accion_save_file.setShortcut(QKeySequence('Ctrl+S'))
 
-        accion_clear_img_original = QAction('Borrar imagen original', self)
+        accion_clear_img_original = QAction(QIcon('icons/cross.png'), 'Borrar imagen original', self)
+        accion_clear_img_original.setToolTip('Ctrl + d')
         accion_clear_img_original.triggered.connect(self.clear_img_original)
         accion_clear_img_original.setShortcut(QKeySequence('Ctrl+D'))
 
-        accion_clear_img_filtro = QAction('Borrar imagen transformada', self)
+        accion_clear_img_filtro = QAction(QIcon('icons/cross-circle.png'),
+                                          'Borrar imagen transformada', self)
+        accion_clear_img_filtro.setToolTip('Ctrl+Alt+d')
         accion_clear_img_filtro.triggered.connect(self.clear_img_final)
         accion_clear_img_filtro.setShortcut(QKeySequence('Ctrl+Alt+D'))
 
-        menu_bar = self.menuBar()
-        menu_archivo = menu_bar.addMenu('&Archivo')
-        menu_archivo.addSeparator()
-        menu_archivo.addAction(accion_abrir_file)
-        menu_archivo.addAction(accion_save_file)
-        menu_archivo.addAction(accion_clear_img_original)
-        menu_archivo.addAction(accion_clear_img_filtro)
+        accion_clear_all = QAction(QIcon('icons/cross-circle-frame.png'), 'Borrar todo', self)
+        accion_clear_all.setToolTip('Ctrl + Shift + d')
+        accion_clear_all.setShortcut(QKeySequence('Ctrl+Shift+d'))
+        accion_clear_all.triggered.connect(self.clear_img_original)
+        accion_clear_all.triggered.connect(self.clear_img_final)
+
+        toolbar = QToolBar('Barra de herramientas')
+        toolbar.setIconSize(QSize(32, 32))
+        toolbar.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.addToolBar(toolbar)
+        toolbar.addAction(accion_abrir_file)
+        toolbar.addAction(accion_save_file)
+        toolbar.addAction(accion_clear_img_original)
+        toolbar.addAction(accion_clear_img_filtro)
+        toolbar.addAction(accion_clear_all)
+
 
         boton_select_img = QPushButton("Abrir imagen")
         boton_select_img.setFixedSize(QSize(100, 50))
@@ -64,6 +78,7 @@ class VentanaPrincipal(QMainWindow):
         self.parametro = QDoubleSpinBox()
         self.parametro.setRange(1, 100)
         self.parametro.setPrefix('C=')
+        self.parametro.setValue(40)
         self.parametro.setFixedSize(QSize(75, 20))
 
         tuto_label = QLabel('Selecciones una imagen para \n'
@@ -170,6 +185,7 @@ class VentanaPrincipal(QMainWindow):
 
     def clear_img_final(self):
         self.img_final.clear()
+        self.bandera_img_final = False
 
 
 app = QApplication(sys.argv)
