@@ -83,11 +83,13 @@ class VentanaPrincipal(QMainWindow):
 
         boton_filtro_log = QPushButton("Aplicar filtro")
         boton_filtro_log.setFixedSize(QSize(100, 50))
+        boton_filtro_log.setShortcut(QKeySequence('Ctrl+L'))
         boton_filtro_log.clicked.connect(self.filtro_img_click)
 
         boton_filtro_opt = QPushButton("Aplicar filtro \n"
                                        "óptimo")
         boton_filtro_opt.setFixedSize(QSize(100, 50))
+        boton_filtro_opt.setShortcut(QKeySequence('Ctrl+O'))
         boton_filtro_opt.clicked.connect(self.filtro_opt_click)
 
         self.parametro = QDoubleSpinBox()
@@ -100,6 +102,8 @@ class VentanaPrincipal(QMainWindow):
                             'aplicar la transformación logaritmo. \n'
                             'Mientras más aumente el factor C, \n'
                             'aumentara el brillo de la imagen. \n'
+                            'Ctrl + L aplica el filtro seleccionado. \n'
+                            'Ctrl + O aplica el filtro óptimo.'
                             )
         tuto_label.setFixedSize(QSize(200, 100))
 
