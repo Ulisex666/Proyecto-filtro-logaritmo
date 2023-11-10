@@ -187,8 +187,8 @@ class VentanaPrincipal(QMainWindow):
         else:
             self.img_fullscreen = VentanaFullScreen()
             img_fullscreen_label = QLabel(self)
-            img_fullscreen_label.setPixmap(self.pix_map_filtro)
-            img_fullscreen_label.setMaximumSize(QSize(1080, 720))
+            img_fullscreen_label.setPixmap(self.pix_map_filtro.scaled(QSize(1080, 720),
+                                                                      Qt.AspectRatioMode.KeepAspectRatio))
             self.img_fullscreen.setCentralWidget(img_fullscreen_label)
             self.img_fullscreen.show()
 
