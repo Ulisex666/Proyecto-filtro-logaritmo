@@ -55,7 +55,7 @@ $$
 
 Para tener una idea más visual de lo que hace esta transformación, veamos que le sucede a la siguiente imagen:
 
-![grayscale](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/4c3df90b-5c59-427d-8109-a3ae214d3085).
+![grayscale](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/4c3df90b-5c59-427d-8109-a3ae214d3085)
 
 Esta es una banda que representa todos los valores de intensidad en escala de grises, empezando con 0 en la izquierda y llegando a 255 en la derecha. Bajo la transformación con un parámetro óptimo, esta banda se ve de la siguiente forma:
 
@@ -65,3 +65,24 @@ Esta es una banda que representa todos los valores de intensidad en escala de gr
 Resulta claro que la imagen es mucho más brillante, con tonos más claros. Esto toma sentido considerando que los valores de intensidad 0 y 15 se transforman a 0 y 127 (se toman valores enteros después de aplicar la transformación). Así, dos valores que apenas tendrían diferencia a simple vista toman una diferencia muy grande, que permitirá apreciar un mejor contraste en la imagen transformada. Sim embargo, en el otro extremo, pixeles con valores originales de 205 y 255 se transforman en 245 y 255. Así, dos pixeles que tendrían una gran diferencia en la imagen original se ven idénticos después de la transformación.
 
 Por lo tanto, la transformación visual logaritmo nos permite apreciar con más claridad los detalles en las zonas más oscuras de la imagen, pero a cambio se pierden aquello en las zonas más claras. Entonces, este filtro es muy útil a la hora de aclarar imágenes que por distintos motivos se vean más oscuras de lo que se desea, por ejemplo a la hora de tomar fotos a contraluz.
+
+## Mockup e implementación
+
+Teniendo en cuenta como funciona la transformación, se diseñó el siguiente bosquejo o mockup para la GUI:
+
+![mockup](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/59b43aff-c783-4917-928f-15b3eb8e1e04)
+
+Para empezar se decidió que eran necesarios 3 botones, uno que permita seleccionar cualquier imagen soportada por el programa, otro que permita aplicar el filtro con el parámetro $c$ seleccionado y uno que permita aplicar el parámetro $c$ óptimo de forma automática. El widget *QPushButton* fue ideal para esta aplicación. A su vez, se necesitaba una forma de poder seleccionar el parámetro $c$ de forma que se limitara solamente a valores reales, y se eligió el widget *QDoubleSpinBox* limitado a los valores en el rango $(0, 100)$. Se podría considerar innecesario el dar la libertad de elegir el parámetro $c$ de forma libre si existe una forma matemática de optimizarlo, pero se decidió dar esta opción para pdoer apreciar de forma más clara como funciona la transformación.
+
+También se pensó en mostrar la imagen original y la imagen tranformada una al lado de la otra, para poder apreciar claramente el cambio. A la hora de la implementación se decidió mostrar las imágenes a color sin transformalas a escala de grises. Además, se fijo el tamaño de la ventana del programa a 720 x 1080 pixeles, con la idea de que no se llene la pantalla del computador a la hora de ejecutar el programa. También se limitó el tamaño de las imágenes a 400 x 400 pixeles, para evitar abarcar todo el espacio del programa.
+
+Para el funcionamiento del programa se utiliza un widget `QFileDialog.getOpenFileName` para obtener la ruta del archivo en el computador. Con esto, se genera un *QPixMap* y se le asigna a una *QLabel*, que es la imagen original que se muestra en el programa. Cuando se presiona el botón 'Aplicar filtro':
+1. Se abre la ruta de la imagen con cv2, que la lee como una matriz.
+2. Se tranforma a formato de escala de grises utilizando cv2.
+3. Se utiliza numpy para aplicar la fórmula tomando el valor de $c$ dado.
+4. Esta matriz de reales se transforma a una matriz de enteros.
+5. Se genera una *QImage* utilizando esta matriz.
+6. Se tranforma esta imagen a un *QPixMap* y se ajusta su tamaño.
+7. Se le asigna este mapa de pixeles a una *QLabel* y esta es la imagen transformada que se muestra en el programa.
+
+El botón 'Aplicar filtro óptimo' funciona de forma casi idéntica, la única diferencia es que el parámetro $c$ se calcula automáticamente con la fórmula antes dada.
