@@ -35,7 +35,7 @@ $$
 \text{pixel transformado} = c \cdot \log(r + 1)
 $$
 
-Donde $r$ es la intensidad del píxel original y $c$ es un parámetro para elegir. Recordemos que $\log 0$ no está definido, por lo que es necesario sumar 1 a todos los valores para el caso en el que un píxel tenga intensidad 0. El valor de la base del logaritmo nos es indiferente en este caso, por lo que se toma base 10. Para entender que hace el parámetro $c$, es necesario analizar la transformación a profundidad.
+Donde $r$ es la intensidad del píxel original y $c$ es un parámetro para elegir. Recordemos que $\log 0$ no está definido, por lo que es necesario sumar 1 a todos los valores para el caso en el que un píxel tenga intensidad 0. El valor de la base del logaritmo es indiferente, por lo que se toma base 10. Para entender que hace el parámetro $c$, es necesario analizar la transformación a profundidad.
 
 Veamos que les sucede a los valores en el rango $[0, 255]$ 
 
@@ -50,7 +50,7 @@ $$
 o, despejando a c
 
 $$
-c = \dfrac{\log(r_{max} + 1)}{255}.
+c = \dfrac{255}{\log(r_{max} + 1)}.
 $$
 
 Para tener una idea más visual de lo que hace esta transformación, veamos que le sucede a la siguiente imagen:
@@ -62,7 +62,7 @@ Esta es una banda que representa todos los valores de intensidad en escala de gr
 
 ![grayscale_log](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/2b4c8d94-e5ea-47ad-8d14-ce47703a6f2f)
 
-Resulta claro que la imagen es mucho más brillante, con tonos más claros. Esto toma sentido considerando que los valores de intensidad 0 y 15 se transforman a 0 y 127 (se toman valores enteros después de aplicar la transformación). Así, dos valores que apenas tendrían diferencia a simple vista toman una diferencia muy grande, que permitirá apreciar un mejor contraste en la imagen transformada. Sim embargo, en el otro extremo, pixeles con valores originales de 205 y 255 se transforman en 245 y 255. Así, dos pixeles que tendrían una gran diferencia en la imagen original se ven idénticos después de la transformación.
+Notemos que la imagen es mucho más brillante, con tonos más claros. Esto toma sentido considerando que los valores de intensidad 0 y 15 se transforman a 0 y 127 (se toman valores enteros después de aplicar la transformación). Así, dos valores que apenas tendrían diferencia a simple vista toman una diferencia muy grande, que permitirá apreciar un mejor contraste en la imagen transformada. Sim embargo, en el otro extremo, pixeles con valores originales de 205 y 255 se transforman en 245 y 255. Así, dos pixeles que tendrían una gran diferencia en la imagen original se ven idénticos después de la transformación.
 
 Por lo tanto, la transformación visual logaritmo nos permite apreciar con más claridad los detalles en las zonas más oscuras de la imagen, pero a cambio se pierden aquello en las zonas más claras. Entonces, este filtro es muy útil a la hora de aclarar imágenes que por distintos motivos se vean más oscuras de lo que se desea, por ejemplo, a la hora de tomar fotos a contraluz.
 
@@ -93,7 +93,7 @@ A continuación, se muestra una captura de pantalla de la aplicación después d
 
 ![app_opt](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/dbb6cd20-8a28-4e3e-89d2-d5901073f84e)
 
-La mayor diferencia entre el resultado final y el mockup es la adición de una barra de herramientas, a la que se le agregaron atajos de teclado que permiten utilizar el programa con mayor facilidad. Las funciones que se agregaron que no eran parte del diseño original es la capacidad de borrar la imagen original, borrar la imagen transformada, borrar ambas imágenes, guardar la imagen transformada y mostrar la imagen transformada en una nueva ventana para poder apreciarla con mayor claridad. También se agregaron mensajes de error para algunas situaciones en específico. A continuación, se muestran capturas de la búsqueda de imágenes en la aplicación, una imagen transformada con un parámetro muy alto, un mensaje de error, una imagen en tamaño completo y un ejemplo de una imagen que se guardó después de la transformación:
+La mayor diferencia entre el resultado final y el mockup es la adición de una barra de herramientas, a la que se le agregaron atajos de teclado que permiten utilizar el programa con mayor facilidad. Las funciones que se agregaron que no eran parte del diseño original es la capacidad de borrar la imagen original, borrar la imagen transformada, borrar ambas imágenes, guardar la imagen transformada y mostrar la imagen transformada en una nueva ventana para poder apreciarla con mayor claridad. También se agregaron mensajes de error para algunas situaciones en específico. A continuación, se muestran capturas de la búsqueda de imágenes en la aplicación, una imagen transformada con un parámetro muy alto, un mensaje de error, una imagen en tamaño completo y un ejemplo de una imagen antes y después de ser tranformada:
 
 ![app_open_file](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/869335ea-6afc-4ec0-844b-4a3a97cb9032)
 
@@ -103,7 +103,7 @@ La mayor diferencia entre el resultado final y el mockup es la adición de una b
 
 ![app_fullscreen](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/958edc8e-1acb-443f-9beb-f703d0ad41c6)
 
-<img src="https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/85814776-fb0c-4087-9878-8f374714ff93" alt="Rosa transformada" width="500"/>
+<img src="https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/dec18681-8c2a-40bf-9349-a21e2216625c" alt="Rosa transformada" height="500"/>
 
 Como se mencionó antes, y como se aprecia en las capturas, a pesar de que el proyecto se inició con la idea de aplicar la transformación a imágenes en formato TIFF, esto se amplió para poder transformar imágenes en formato JPG, JPEG y PNG. Se consiguieron implementar todas las funcionalidades que se buscaban e inclusive varias que no se habían previsto, pero resultan útiles para el análisis de imágenes. Por lo tanto, este programa se puede considerar un éxito.
 
