@@ -18,3 +18,50 @@ Para el desarrollo de la GUI se ocupó la paqueteria PyQt6, que permite utilizar
 OpenCV2 fue la librería que se utilizó para aplicar el filtro a las imágenes. Su uso fue limitado, ya que solamente se necesitó para poder abrir las imágenes como una lista de vectores. Para aplicar la transformación en sí se utilizó la función logaritmo de la librería numpy. Un problema importante a la hora de leer imágenes es que OpenCV2 no soporta rutas de imágenes que contengan tildes, lo que no permite utilizar las imágenes que se encuentran en la carpeta "Imágenes" del computador.
 
 Finalmente, aunque se permitió abrir imágenes con otros formatos, las imágenes con las que se puso a prueba el programa se encuentran en formato TIFF. La ventaja de este formato comparado con otros es que mantiene la imagen con una calidad muy alta y no tiene ninguna perdida, lo que es importante para la visión por computadora. Sin embargo, tiene la desventaja de que es mucho más pesado que otros formatos como el .jpg o .png, lo que impide su uso para conjuntos muy grandes de datos visuales.
+
+## Método
+Para poder desarrollar el programa, primero fue necesario investigar qué es la transformación logaritmo y para que se utiliza.
+
+### Transformación visual logaritmo.
+Empecemos aclarando que esta transformación solo se aplica a imágenes en escala de grises. Aunque se desarrolló el programa para permitir trabajar con imágenes a color, estas son transformadas a grayscale de 8 bits utilizando cv2, como por ejemplo en la lína de código
+
+``` python
+ img_no_filtro = cv2.cvtColor(img_no_filtro, cv2.COLOR_RGB2GRAY)
+```
+
+Así, a la hora de abrir la imagen con cv2, el programa la lee como una matriz de n*m elementos, donde n es el alto y m el ancho de la imagen, y cada elemento es un pixel. A cada pixel se le asigna un valor entre 0 y 255, que corresponde a su intensidad. Con esto, la fórmula utilizada para la transformación logaritmo es 
+
+$$
+\text{pixel transformado} = c \cdot \log(r + 1)
+$$
+
+Donde $r$ es la intensidad del pixel original y $c$ es un parámetro a elegir. Recordemos que $\log 0$ no está definido, por lo que es necesario sumar 1 a todos los valores para el caso en el que un pixel tenga intensidad 0. El valor de la base del logaritmo nos es indiferente en este caso, por lo que se toma base 10. Para entender que hace el parámetro $c$, es necesario analizar la transformación a profundidad.
+
+Veamos que le sucede a los valores en el rango $[0, 255]$ 
+
+<img src="https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/75636eae-85f7-49e7-92ff-cff72e8c02f6" alt="Transformación sin parámetro C" width="500"/>
+
+Notemos que los valores se quedan en el rango $[0, 2.5)$, es decir, todas toman valores muy oscuros. Si no multiplicaramos por el factor de ajuste $c$, todas las imágenes se verían como una imagen en negro. Así, para elegir $c$ de forma óptima, es necesario que mande a el elemento con la mayor intensidad en la imagen original a una intensidad de 255 en la imagen final. Esto es
+
+$$
+255 = c \cdot \log(r_{max} + 1)
+$$
+
+o, despejando a c
+
+$$
+c = \dfrac{\log(r_{max} + 1)}{255}.
+$$
+
+Para tener una idea más visual de lo que hace esta transformación, veamos que le sucede a la siguiente imagen:
+
+![grayscale](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/4c3df90b-5c59-427d-8109-a3ae214d3085).
+
+Esta es una banda que representa todos los valores de intensidad en escala de grises, empezando con 0 en la izquierda y llegando a 255 en la derecha. Bajo la transformación con un parámetro óptimo, esta banda se ve de la siguiente forma:
+
+
+![grayscale_log](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/2b4c8d94-e5ea-47ad-8d14-ce47703a6f2f)
+
+Resulta claro que la imagen es mucho más brillante, con tonos más claros. Esto toma sentido considerando que los valores de intensidad 0 y 15 se transforman a 0 y 127 (se toman valores enteros después de aplicar la transformación). Así, dos valores que apenas tendrían diferencia a simple vista toman una diferencia muy grande, que permitirá apreciar un mejor contraste en la imagen transformada. Sim embargo, en el otro extremo, pixeles con valores originales de 205 y 255 se transforman en 245 y 255. Así, dos pixeles que tendrían una gran diferencia en la imagen original se ven idénticos después de la transformación.
+
+Por lo tanto, la transformación visual logaritmo nos permite apreciar con más claridad los detalles en las zonas más oscuras de la imagen, pero a cambio se pierden aquello en las zonas más claras. Entonces, este filtro es muy útil a la hora de aclarar imágenes que por distintos motivos se vean más oscuras de lo que se desea, por ejemplo a la hora de tomar fotos a contraluz.
