@@ -86,3 +86,28 @@ Para el funcionamiento del programa se utiliza un widget `QFileDialog.getOpenFil
 7. Se le asigna este mapa de pixeles a una *QLabel* y esta es la imagen transformada que se muestra en el programa.
 
 El botón 'Aplicar filtro óptimo' funciona de forma casi idéntica, la única diferencia es que el parámetro $c$ se calcula automáticamente con la fórmula antes dada.
+
+## Resultados
+
+A continuación se muestra una captura de pantalla de la aplicación después de aplicar el filtro óptimo.
+
+![app_opt](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/dbb6cd20-8a28-4e3e-89d2-d5901073f84e)
+
+La mayor diferencia entre el resultado final y el mockup es la adición de una barra de herramientas, a la que se le agregaron atajos de teclado que permiten utilizar el programa con mayor facilidad. Las funciones que se agregaron que no eran parte del diseño original es la capacidad de borrar la imagen original, borrar la imagen transformada, borrar ambas imágenes, guardar la imagen transformada y mostrar la imagen transformada en una nueva ventana para poder apreciarla con mayor claridad. También se agregaron mensajes de error para algunas situaciones en específico. A continuación se muestran capturas de la búsqueda de imágenes en la aplicación, una imagen tranformada con un parámetro muy alto, un mensaje de error, una imagen en tamaño completo y un ejemplo de una imagen que se guardo después de la transformación:
+
+![app_open_file](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/869335ea-6afc-4ec0-844b-4a3a97cb9032)
+
+![app_mal_parametro](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/0a6885b2-f340-4c18-a0a9-09aec6a35a52)
+
+![app_error](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/e9fe19a3-1309-4ff2-8796-6015988a19a3)
+
+![app_fullscreen](https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/958edc8e-1acb-443f-9beb-f703d0ad41c6)
+
+<img src="https://github.com/Sesilu00/Proyecto-filtro-logaritmo/assets/142864667/85814776-fb0c-4087-9878-8f374714ff93" alt="Rosa transformada" width="500"/>
+
+Como se menciono antes, y como se aprecia en las capturas, a pesar de que el proyecto se inició con la idea de aplicar la transformación a imágenes en formato TIFF, esto se amplio para poder transformar imágenes en formato JPG, JPEG y PNG. Se consiguieron implementar todas las funcionalidades que se buscaban e inclusive varias que no se habían previsto pero resultan útiles para el análisis de imágenes. Por lo tanto, este programa se puede considerar un éxito.
+
+## Referencias y atribuciones
+
+Algunos iconos por [Yusuke Kamiyamane](https://p.yusukekamiyamane.com/). Bajo una Licencia Creative Commons Atribución 3.0.
+Para la investigación sobre la transformación logaritmo se consultó la página [Packt Pub](https://subscription.packtpub.com/book/data/9781784391454/1/ch01lvl1sec16/logarithmic-transformations). Se consultaron las páginas [Clandestina HDS](https://clandestina-hds.com/curso-pyqt.html) y [Phyton GUIs](https://www.pythonguis.com/pyqt6/) para la implementación de PyQT6.
