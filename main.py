@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import (QApplication, QPushButton, QMainWindow, QFileDialog,
-                             QLabel, QWidget, QDoubleSpinBox, QGridLayout, QHBoxLayout,
-                             QStyle, QToolBar, QMessageBox)
+                             QLabel, QWidget, QDoubleSpinBox, QGridLayout, QStyle,
+                             QToolBar, QMessageBox)
 from PyQt6.QtGui import QPixmap, QImage, QAction, QKeySequence, QIcon
 from PyQt6.QtCore import QSize, Qt
 import sys
