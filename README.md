@@ -1,6 +1,9 @@
 # Proyecto-filtro-logaritmo
 Creación de una interfaz visual utilizando PyQT6 que permita aplicar la transformación logaritmo a las imágenes que se deseen, aplicando esta transformación con las funciones de la paquetería OpenCV2.
 
+## NOTA:
+Se creó un fork del proyecto original dado que perdí acceso a esa cuenta.
+
 ## Introducción
 Con la realización de este programa se espera obtener una herramienta que pueda ser útil a la hora de trabajar con visión por computadora, por lo que se empezará definiendo este concepto. La visión por computadora o visión artificial es una rama de la inteligencia artificial que se encarga del análisis de imágenes digitales, videos y otros medios visuales utilizando computadoras y sistemas informáticos. La visión digital se inspira en la visión humana, pero con la diferencia de la capacidad de las computadoras de analizar datos de forma extremadamente rápida a comparación del tiempo que le toma a un humano, por lo que se pueden analizar miles de imágenes por minuto. 
 
